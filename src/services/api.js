@@ -68,7 +68,7 @@ export const buscarLista = (listaId) => chamar("GET", `/listas/${id(listaId)}`);
  */
 export const sincronizar = (operacoes) =>
   chamar("POST", "/listas/sincronizar", {
-    operacoes: operacoes.map(({ id, tipo, listaId, base, itemId, nome, marcado }) => ({
+    operacoes: operacoes.map(({ id, tipo, listaId, base, itemId, nome, marcado, formato }) => ({
       id,
       tipo,
       listaId,
@@ -76,5 +76,6 @@ export const sincronizar = (operacoes) =>
       itemId,
       nome,
       marcado,
+      formato,
     })),
   });

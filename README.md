@@ -31,6 +31,12 @@ A barra superior tem três botões com ícones, no lugar do antigo menu lateral:
 
 - **Minhas listas**: nome e contagem de marcados (`2/3`); tocar abre a lista, a lixeira exclui a lista com todos os itens (com confirmação).
 - **Lista**: campo fixo no topo para adicionar (Enter adiciona e mantém o foco para o próximo item); marcar risca o item e o leva para o fim.
+- **Listas de lembretes** (escolha o tipo ao criar a lista): cada item é um texto livre, guardado
+  exatamente como foi colado (várias linhas, maiúsculas e minúsculas, emojis), até 3000
+  caracteres. Serve para a mensagem de uma consulta marcada, um endereço, um recado. O campo
+  cresce com o texto, tem botão de colar (quando o navegador permite) e Ctrl+Enter adiciona;
+  lembretes longos aparecem recolhidos ("Mostrar tudo"); cada um pode ser marcado como feito,
+  copiado ou removido (com confirmação).
 - A navegação usa o `#` do endereço (`#/`, `#/nova`, `#/lista/<id>`): o botão voltar do Android funciona e recarregar a página mantém a tela.
 
 ## Modo offline

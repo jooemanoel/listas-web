@@ -474,6 +474,179 @@ input:focus {
   filter: brightness(1.1);
 }
 
+/* ---------- tipo da lista (nova lista) ---------- */
+
+.formatos {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.formatos legend {
+  margin-bottom: 6px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.formato {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 2px solid var(--borda);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.formato .icone {
+  margin-top: 1px;
+  color: var(--texto-suave);
+}
+
+.formato span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.formato small {
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+.formato.escolhido {
+  border-color: var(--destaque);
+  background: var(--superficie-2);
+}
+
+.formato.escolhido .icone {
+  color: var(--destaque);
+}
+
+.formato:has(:focus-visible) {
+  outline: 2px solid var(--destaque);
+  outline-offset: 2px;
+}
+
+.icone-formato {
+  color: var(--destaque);
+}
+
+/* ---------- lembretes (textos de várias linhas) ---------- */
+
+.adicionar-lembrete {
+  align-items: flex-end;
+}
+
+.adicionar-lembrete textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 72px;
+  max-height: 45vh;
+  padding: 12px 16px;
+  border: 2px solid var(--borda);
+  border-radius: 16px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  resize: none;
+  outline: none;
+}
+
+.adicionar-lembrete textarea:focus {
+  border-color: var(--destaque);
+}
+
+.acoes-lembrete {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.acoes-lembrete .botao-icone:not(.destaque) {
+  color: var(--texto-suave);
+}
+
+.lembretes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lembrete {
+  margin-bottom: 12px;
+  padding: 16px 8px 4px 16px;
+}
+
+.texto-lembrete {
+  margin: 0 8px 8px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+
+.texto-lembrete.recolhido {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  overflow: hidden;
+}
+
+.lembrete.feito .texto-lembrete {
+  color: var(--texto-suave);
+}
+
+.rodape-lembrete {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-top: 1px solid var(--borda);
+  padding-top: 4px;
+}
+
+.rodape-lembrete .botao-icone {
+  color: var(--texto-suave);
+}
+
+.marcar-lembrete {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 14px;
+  color: var(--texto-suave);
+  cursor: pointer;
+}
+
+.marcar-lembrete:has(:focus-visible) {
+  outline: 2px solid var(--destaque);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.botao-texto {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 18px;
+  color: var(--destaque);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.botao-texto:hover {
+  background: var(--superficie-2);
+}
+
 /* Itens deslizam ao mudar de posição (marcados vão para o fim). */
 .item-move {
   transition: transform 0.25s ease;

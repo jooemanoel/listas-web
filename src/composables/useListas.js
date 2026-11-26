@@ -72,6 +72,29 @@ function novoId() {
 /** Igual à API: espaços aparados e em maiúsculas. */
 export const normalizar = (texto) => String(texto ?? "").replace(/\s+/g, " ").trim().toUpperCase();
 
+/**
+ * Igual à API: texto de um lembrete mantém linhas, maiúsculas e emojis; só padroniza
+ * quebras de linha, espaços no fim das linhas e linhas em branco repetidas.
+ */
+export const normalizarLembrete = (texto) =>
+  String(texto ?? "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, "")
+    .replace(/[ \t\u00A0]+$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+/** Nome de um item novo conforme o formato da lista ("itens" ou "lembretes"). */
+export const nomeDoItem = (formato, texto) => (formato === "lembretes" ? normalizarLembrete(texto) : normalizar(texto));
+
+/** Primeira linha, curta: para o histórico e as mensagens (lembretes podem ser longos). */
+export function resumir(texto) {
+  const linha = String(texto ?? "").split("\n")[0];
+  return linha.length > 40 ? `${linha.slice(0, 40)}…` : linha;
+}
+
+export const LIMITE_LEMBRETE = 3000; // caracteres, igual à API
+
 const ordenar = (listas) => [...listas].sort((a, b) => a.nome.localeCompare(b.nome));
 
 // ---------- aplicar a fila sobre as listas do servidor ----------
@@ -81,7 +104,7 @@ function aplicar(listas, op) {
   const i = listas.findIndex((l) => l.id === op.listaId);
 
   if (op.tipo === "criarLista") {
-    if (i < 0) listas.push({ id: op.listaId, nome: op.nome, itens: [], criadoEm: op.em, atualizadoEm: op.em, pendente: true });
+    if (i < 0) listas.push({ id: op.listaId, nome: op.nome, formato: op.formato ?? "itens", itens: [], criadoEm: op.em, atualizadoEm: op.em, pendente: true });
     return;
   }
   if (i < 0) return;
@@ -289,10 +312,11 @@ export function useListas() {
       }
     },
 
-    criar(nome) {
+    /** formato: "itens" (compras, tarefas) ou "lembretes" (textos guardados como foram escritos). */
+    criar(nome, formato = "itens") {
       const id = novoId();
       const nomeFinal = normalizar(nome);
-      registrar({ tipo: "criarLista", listaId: id, nome: nomeFinal }, `Criou a lista ${nomeFinal}`);
+      registrar({ tipo: "criarLista", listaId: id, nome: nomeFinal, formato }, `Criou a lista ${nomeFinal}`);
       return id;
     },
 
@@ -304,14 +328,15 @@ export function useListas() {
     /** Devolve false (com aviso) se o item já estiver na lista. */
     adicionarItem(listaId, nome) {
       const lista = encontrar(listaId);
-      const nomeFinal = normalizar(nome);
+      const nomeFinal = nomeDoItem(lista?.formato, nome);
+      if (!nomeFinal) return false;
       if (lista?.itens.some((i) => i.nome === nomeFinal)) {
-        avisar(`"${nomeFinal}" já está na lista`, "erro");
+        avisar(`"${resumir(nomeFinal)}" já está na lista`, "erro");
         return false;
       }
       registrar(
         { tipo: "adicionarItem", listaId, itemId: novoId(), nome: nomeFinal },
-        `Adicionou ${nomeFinal} em ${lista?.nome ?? ""}`
+        `Adicionou ${resumir(nomeFinal)} em ${lista?.nome ?? ""}`
       );
       return true;
     },
@@ -320,13 +345,13 @@ export function useListas() {
       const lista = encontrar(listaId);
       registrar(
         { tipo: "marcarItem", listaId, itemId: item.id, marcado },
-        `${marcado ? "Marcou" : "Desmarcou"} ${item.nome} em ${lista?.nome ?? ""}`
+        `${marcado ? "Marcou" : "Desmarcou"} ${resumir(item.nome)} em ${lista?.nome ?? ""}`
       );
     },
 
     removerItem(listaId, item) {
       const lista = encontrar(listaId);
-      registrar({ tipo: "removerItem", listaId, itemId: item.id }, `Removeu ${item.nome} de ${lista?.nome ?? ""}`);
+      registrar({ tipo: "removerItem", listaId, itemId: item.id }, `Removeu ${resumir(item.nome)} de ${lista?.nome ?? ""}`);
     },
 
     descarregar,

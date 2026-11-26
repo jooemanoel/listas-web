@@ -16,7 +16,12 @@ export function formatarData(iso) {
 }
 
 // Texto da lista para colar no WhatsApp: título em *negrito* e itens marcados ~riscados~.
-export function listaParaTexto(nome, itens) {
+// Lembretes (várias linhas) vão inteiros, separados por uma linha; os feitos com ✅ no início.
+export function listaParaTexto(nome, itens, formato = "itens") {
+  if (formato === "lembretes") {
+    const blocos = itens.map((i) => (i.marcado ? `✅ ${i.nome}` : i.nome));
+    return [`*${nome}*`, blocos.join("\n\n———\n\n")].join("\n\n");
+  }
   const linhas = itens.map((i) => (i.marcado ? `✅ ~${i.nome}~` : `⬜ ${i.nome}`));
   return [`*${nome}*`, "", ...linhas].join("\n");
 }

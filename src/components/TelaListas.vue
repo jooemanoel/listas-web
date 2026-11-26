@@ -40,6 +40,7 @@ function confirmarExclusao(lista) {
     <ul class="linhas">
       <li v-for="lista in listas" :key="lista.id" class="linha">
         <button class="linha-principal" @click="ir(`/lista/${encodeURIComponent(lista.id)}`)">
+          <Icone v-if="lista.formato === 'lembretes'" nome="lembrete" class="icone-formato" />
           <span class="reticencias">{{ lista.nome }}</span>
           <span v-if="lista.pendente" class="pendente" title="Alterações ainda não sincronizadas">não sincronizada</span>
           <span class="contagem" :title="`${marcados(lista)} de ${lista.itens.length} marcados`">
