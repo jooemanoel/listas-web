@@ -29,14 +29,14 @@ A barra superior tem três botões com ícones, no lugar do antigo menu lateral:
 | `format_list_bulleted` | Minhas listas |
 | `logout` | Sair |
 
-- **Minhas listas**: nome e contagem de marcados (`2/3`); tocar abre a lista, a lixeira exclui a lista com todos os itens (com confirmação).
-- **Lista**: campo fixo no topo para adicionar (Enter adiciona e mantém o foco para o próximo item); marcar risca o item e o leva para o fim.
+- **Minhas listas**: nome e número de itens; tocar abre a lista, a lixeira exclui a lista com todos os itens (com confirmação).
+- **Lista**: campo fixo no topo para adicionar (Enter adiciona e mantém o foco para o próximo item); não há marcação: o que foi resolvido (comprado, feito) é removido, e a lista mostra só o que está pendente. O botão de copiar gera o texto para colar no WhatsApp (título em negrito, um item por linha).
 - **Listas de lembretes** (escolha o tipo ao criar a lista): cada item é um texto livre, guardado
   exatamente como foi colado (várias linhas, maiúsculas e minúsculas, emojis), até 3000
   caracteres. Serve para a mensagem de uma consulta marcada, um endereço, um recado. O campo
   cresce com o texto, tem botão de colar (quando o navegador permite) e Ctrl+Enter adiciona;
-  lembretes longos aparecem recolhidos ("Mostrar tudo"); cada um pode ser marcado como feito,
-  copiado ou removido (com confirmação).
+  lembretes longos aparecem recolhidos ("Mostrar tudo"); cada um pode ser copiado ou
+  removido (com confirmação).
 - A navegação usa o `#` do endereço (`#/`, `#/nova`, `#/lista/<id>`): o botão voltar do Android funciona e recarregar a página mantém a tela.
 
 ## Modo offline
@@ -46,7 +46,7 @@ O app funciona sem internet depois de ter sido aberto (e as listas carregadas) u
 - **Cópia no aparelho:** as listas, como o servidor as devolveu da última vez (cada uma com o
   seu `atualizadoEm`), ficam no `localStorage`, separadas por usuário. Ao abrir o app, essa
   cópia aparece na hora e depois é atualizada pelo servidor.
-- **Fila de alterações (histórico):** criar/excluir lista e adicionar/marcar/remover item
+- **Fila de alterações (histórico):** criar/excluir lista e adicionar/remover item
   entram numa fila, com a hora da alteração e o `atualizadoEm` que o aparelho conhecia. A tela
   mostra a cópia do servidor com a fila aplicada por cima, então tudo responde na hora.
 - **Online**, a fila é enviada logo em seguida (`POST /listas/sincronizar`).

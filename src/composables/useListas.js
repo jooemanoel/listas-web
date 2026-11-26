@@ -119,6 +119,7 @@ function aplicar(listas, op) {
     if (itens.some((it) => it.id === op.itemId || it.nome === op.nome)) return;
     itens = [...itens, { id: op.itemId, nome: op.nome, marcado: false }];
   } else if (op.tipo === "marcarItem") {
+    // A marcação saiu do app, mas a fila guardada no aparelho pode ter operações antigas.
     if (!itens.some((it) => it.id === op.itemId)) return;
     itens = itens.map((it) => (it.id === op.itemId ? { ...it, marcado: op.marcado } : it));
   } else if (op.tipo === "removerItem") {
@@ -339,14 +340,6 @@ export function useListas() {
         `Adicionou ${resumir(nomeFinal)} em ${lista?.nome ?? ""}`
       );
       return true;
-    },
-
-    marcarItem(listaId, item, marcado) {
-      const lista = encontrar(listaId);
-      registrar(
-        { tipo: "marcarItem", listaId, itemId: item.id, marcado },
-        `${marcado ? "Marcou" : "Desmarcou"} ${resumir(item.nome)} em ${lista?.nome ?? ""}`
-      );
     },
 
     removerItem(listaId, item) {

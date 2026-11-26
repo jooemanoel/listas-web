@@ -414,21 +414,19 @@ input:focus {
   font-variant-numeric: tabular-nums;
 }
 
-.caixa {
-  color: var(--destaque);
-}
-
 .nome-item {
   overflow-wrap: anywhere;
 }
 
-.feito .nome-item {
-  color: var(--texto-suave);
-  text-decoration: line-through;
-}
-
-.feito .caixa {
-  color: var(--texto-suave);
+/* Item de lista: só o texto (sem marcação) e o botão de remover. */
+.linha-texto {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 8px 8px 8px 16px;
+  font-weight: 500;
 }
 
 .resumo {
@@ -600,13 +598,10 @@ input:focus {
   overflow: hidden;
 }
 
-.lembrete.feito .texto-lembrete {
-  color: var(--texto-suave);
-}
-
 .rodape-lembrete {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 2px;
   border-top: 1px solid var(--borda);
   padding-top: 4px;
@@ -614,24 +609,6 @@ input:focus {
 
 .rodape-lembrete .botao-icone {
   color: var(--texto-suave);
-}
-
-.marcar-lembrete {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  font-size: 14px;
-  color: var(--texto-suave);
-  cursor: pointer;
-}
-
-.marcar-lembrete:has(:focus-visible) {
-  outline: 2px solid var(--destaque);
-  outline-offset: 2px;
-  border-radius: 8px;
 }
 
 .botao-texto {
@@ -647,7 +624,7 @@ input:focus {
   background: var(--superficie-2);
 }
 
-/* Itens deslizam ao mudar de posição (marcados vão para o fim). */
+/* Itens entram e saem com transição. */
 .item-move {
   transition: transform 0.25s ease;
 }

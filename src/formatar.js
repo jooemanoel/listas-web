@@ -15,13 +15,15 @@ export function formatarData(iso) {
   return `${dia} às ${hora.format(data)}`;
 }
 
-// Texto da lista para colar no WhatsApp: título em *negrito* e itens marcados ~riscados~.
-// Lembretes (várias linhas) vão inteiros, separados por uma linha; os feitos com ✅ no início.
+// Texto da lista para colar no WhatsApp: título em *negrito* e um item por linha ("- ",
+// que o WhatsApp mostra como lista). Lembretes (várias linhas) vão inteiros, separados por uma linha.
 export function listaParaTexto(nome, itens, formato = "itens") {
-  if (formato === "lembretes") {
-    const blocos = itens.map((i) => (i.marcado ? `✅ ${i.nome}` : i.nome));
-    return [`*${nome}*`, blocos.join("\n\n———\n\n")].join("\n\n");
-  }
-  const linhas = itens.map((i) => (i.marcado ? `✅ ~${i.nome}~` : `⬜ ${i.nome}`));
-  return [`*${nome}*`, "", ...linhas].join("\n");
+  if (formato === "lembretes") return [`*${nome}*`, itens.map((i) => i.nome).join("\n\n———\n\n")].join("\n\n");
+  return [`*${nome}*`, "", ...itens.map((i) => `- ${i.nome}`)].join("\n");
+}
+
+/** "1 item", "3 itens", "2 lembretes". */
+export function contagem(n, lembretes = false) {
+  if (lembretes) return `${n} ${n === 1 ? "lembrete" : "lembretes"}`;
+  return `${n} ${n === 1 ? "item" : "itens"}`;
 }

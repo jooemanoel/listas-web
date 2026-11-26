@@ -1,5 +1,6 @@
 <script setup>
-// Itens de uma lista: adicionar, marcar/desmarcar e remover.
+// Itens de uma lista: adicionar e remover. Não há marcação: o que foi resolvido
+// (comprado, feito) é removido; a lista mostra só o que está pendente.
 // Listas de lembretes usam um campo de várias linhas e mostram o texto como foi colado.
 // Tudo responde na hora (também offline); o servidor recebe na sincronização.
 import { computed, nextTick, ref, watch } from "vue";
@@ -7,12 +8,12 @@ import Icone from "./Icone.vue";
 import { ir } from "../composables/useRota.js";
 import { LIMITE_LEMBRETE, resumir, useListas } from "../composables/useListas.js";
 import { avisar } from "../composables/useAviso.js";
-import { formatarData, listaParaTexto } from "../formatar.js";
+import { contagem, formatarData, listaParaTexto } from "../formatar.js";
 
 const props = defineProps({ id: { type: String, required: true } });
 const emit = defineEmits(["titulo"]);
 
-const { listas, encontrar, abrir, adicionarItem, marcarItem, removerItem, conexao } = useListas();
+const { listas, encontrar, abrir, adicionarItem, removerItem, conexao } = useListas();
 
 const lista = computed(() => encontrar(props.id));
 const lembretes = computed(() => lista.value?.formato === "lembretes");
@@ -31,12 +32,8 @@ function alternar(id) {
   abertos.value = novos;
 }
 
-// Não marcados primeiro; marcados vão para o fim (ordem de inclusão mantida em cada grupo).
-const itens = computed(() => {
-  const todos = lista.value?.itens ?? [];
-  return [...todos.filter((i) => !i.marcado), ...todos.filter((i) => i.marcado)];
-});
-const totalMarcados = computed(() => itens.value.filter((i) => i.marcado).length);
+// Na ordem em que foram adicionados.
+const itens = computed(() => lista.value?.itens ?? []);
 
 watch(lista, (l) => emit("titulo", l?.nome ?? ""), { immediate: true });
 
@@ -160,11 +157,7 @@ async function adicionar() {
     <!-- Contagem e o atualizadoEm da lista (no servidor, ou a hora da última alteração feita aqui). -->
     <div class="resumo">
       <p>
-        <template v-if="itens.length && lembretes">
-          {{ itens.length }} {{ itens.length === 1 ? "lembrete" : "lembretes" }}
-          <template v-if="totalMarcados">({{ totalMarcados }} {{ totalMarcados === 1 ? "feito" : "feitos" }})</template> ·
-        </template>
-        <template v-else-if="itens.length">{{ totalMarcados }} de {{ itens.length }} marcados · </template>
+        <template v-if="itens.length">{{ contagem(itens.length, lembretes) }} · </template>
         <template v-if="lista.pendente">
           alterada {{ formatarData(lista.atualizadoEm) }} · <span class="pendente">não sincronizada</span>
         </template>
@@ -191,19 +184,9 @@ async function adicionar() {
     </section>
 
     <TransitionGroup v-else-if="lembretes" tag="ul" name="item" class="lembretes">
-      <li v-for="item in itens" :key="item.id" class="cartao lembrete" :class="{ feito: item.marcado }">
+      <li v-for="item in itens" :key="item.id" class="cartao lembrete">
         <p class="texto-lembrete" :class="{ recolhido: longo(item.nome) && !abertos.has(item.id) }">{{ item.nome }}</p>
         <div class="rodape-lembrete">
-          <label class="marcar-lembrete">
-            <input
-              type="checkbox"
-              class="oculto"
-              :checked="item.marcado"
-              @change="marcarItem(id, item, $event.target.checked)"
-            />
-            <Icone :nome="item.marcado ? 'marcado' : 'desmarcado'" class="caixa" />
-            <span>Feito</span>
-          </label>
           <button v-if="longo(item.nome)" class="botao-texto" @click="alternar(item.id)">
             {{ abertos.has(item.id) ? "Mostrar menos" : "Mostrar tudo" }}
           </button>
@@ -229,17 +212,8 @@ async function adicionar() {
 
     <template v-else>
       <TransitionGroup tag="ul" name="item" class="linhas">
-        <li v-for="item in itens" :key="item.id" class="linha" :class="{ feito: item.marcado }">
-          <label class="linha-principal">
-            <input
-              type="checkbox"
-              class="oculto"
-              :checked="item.marcado"
-              @change="marcarItem(id, item, $event.target.checked)"
-            />
-            <Icone :nome="item.marcado ? 'marcado' : 'desmarcado'" class="caixa" />
-            <span class="nome-item">{{ item.nome }}</span>
-          </label>
+        <li v-for="item in itens" :key="item.id" class="linha">
+          <span class="linha-texto nome-item">{{ item.nome }}</span>
           <button
             class="botao-icone"
             :aria-label="`Remover ${item.nome}`"

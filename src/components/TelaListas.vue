@@ -4,10 +4,10 @@ import Icone from "./Icone.vue";
 import { ir } from "../composables/useRota.js";
 import { useListas } from "../composables/useListas.js";
 import { avisar } from "../composables/useAviso.js";
+import { contagem } from "../formatar.js";
 
 const { listas, excluir, conexao } = useListas();
 
-const marcados = (lista) => lista.itens.filter((i) => i.marcado).length;
 
 function confirmarExclusao(lista) {
   const total = lista.itens.length;
@@ -43,8 +43,8 @@ function confirmarExclusao(lista) {
           <Icone v-if="lista.formato === 'lembretes'" nome="lembrete" class="icone-formato" />
           <span class="reticencias">{{ lista.nome }}</span>
           <span v-if="lista.pendente" class="pendente" title="Alterações ainda não sincronizadas">não sincronizada</span>
-          <span class="contagem" :title="`${marcados(lista)} de ${lista.itens.length} marcados`">
-            {{ marcados(lista) }}/{{ lista.itens.length }}
+          <span class="contagem" :title="contagem(lista.itens.length, lista.formato === 'lembretes')">
+            {{ lista.itens.length }}
           </span>
         </button>
         <button
